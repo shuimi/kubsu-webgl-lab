@@ -1,10 +1,9 @@
 import { mat4, vec3 } from 'gl-matrix';
 
-const toRadians = (deg) => deg * (Math.PI / 180);
+const toRadians = (deg) => deg * (Math.PI/180);
 
 export const createTransformationMatrix = (x, y, z, rx, ry, rz, scale) => {
     const matrix = [];
-
     mat4.identity(matrix);
     mat4.translate(matrix, matrix, vec3.fromValues(x, y, z));
     mat4.rotateX(matrix, matrix, toRadians(rx));
