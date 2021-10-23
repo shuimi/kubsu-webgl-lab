@@ -1,6 +1,6 @@
-import { createTransformationMatrix } from "../../Utils/maths";
+import { createTransformationMatrix } from '../../utils/maths';
 
-export default class ModelInstance {
+export default class BodyPosition {
 
     constructor(x, y, z, rx, ry, rz, scale) {
         this.x = x;
@@ -10,6 +10,26 @@ export default class ModelInstance {
         this.ry = ry;
         this.rz = rz;
         this.scale = scale;
+        this.updateTransformationMatrix();
+    }
+
+    updateScale = (scale) => {
+        this.scale = scale;
+        this.updateTransformationMatrix();
+    }
+
+    setTransform = (x, y, z) => {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.updateTransformationMatrix();
+    }
+
+    updateTransform = (x, y, z) => {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+        this.updateTransformationMatrix();
     }
 
     updateRotation = (rx, ry, rz) => {

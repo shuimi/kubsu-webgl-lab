@@ -1,7 +1,7 @@
-import GLC from '../../GLCommander';
-import Shader from '../../Shaders/ModelShader';
+import GLW from '../gl-wrapper';
+import Shader from '../shaders/body-shader';
 
-export default class ModelRenderer {
+export default class Renderer {
 
     constructor(){
         this.shader = new Shader();
@@ -17,26 +17,40 @@ export default class ModelRenderer {
         }
     }
 
-    addInstance = (instance, id) => {
+    addPosition = (instance, id) => {
         this.models[id].instances.push(instance);
     }
 
 
     preRender = () => {
-        GLC.viewport();
-        GLC.depthTest(true);
+        GLW.viewport();
+        GLW.depthTest(true);
     }
 
-    render = (light) => {
+    render = (light, camera) => {
         this.preRender();
         this.shader.use();
         this.shader.enableLight(light);
+        camera.enable(this.shader);
         Object.keys(this.models).forEach(model => {
             this.models[model].type.use(this.shader);
             this.models[model].instances.forEach(instance => {
                 this.shader.enableTransformationMatrix(instance.getTransformationMatrix());
-                GLC.drawTriangles(this.models[model].type.indices.length);
+                GLW.drawTriangles(this.models[model].type.indices.length);
             })
         })
+    }
+
+    addBodies = (bodies) => {
+        bodies.forEach(body => this.addBody(body));
+    }
+
+    addBody = (body) => {
+        this.registerNewModel(body.type, body.id);
+        this.addPosition(body.position, body.id);
+    }
+
+    addModel = (model) => {
+        this.addBodies(model.bodies);
     }
 }

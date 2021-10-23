@@ -1,10 +1,9 @@
-import WebGL from "./Components/WebGL";
+import React from "react";
+import WebGL from "./components/webgl";
 
-function App() {
+const App = () => {
     return (
-        <div>
-            <WebGL/>
-        </div>
+        <WebGL/>
     );
 }
 

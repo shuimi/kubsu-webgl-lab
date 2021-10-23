@@ -1,5 +1,4 @@
-class GLCommander {
-
+class GLWrapper {
     init(gl) {
         this.gl = gl;
     }
@@ -20,7 +19,7 @@ class GLCommander {
     unbindArrayBuffer = () => this.gl.bindBuffer(this.gl.ARRAY_BUFFER, null);
     addArrayBufferData = (vertices) => this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(vertices), this.gl.STATIC_DRAW);
 
-    // integer buffers
+    // int buffers
 
     bindElementArrayBuffer = (buffer) => this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, buffer);
     unbindElementArrayBuffer = () => this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, null);
@@ -40,22 +39,31 @@ class GLCommander {
 
     getAttribLocation = (program, attribute) => this.gl.getAttribLocation(program, attribute);
     enableVertexAttribArray = (attribute) => this.gl.enableVertexAttribArray(attribute);
-    pointToAttribute = (data, dimensions) => {
-        this.gl.vertexAttribPointer(data, dimensions, this.gl.FLOAT, false, 0, 0);
-    }
+    pointToAttribute = (data, dimensions) => this.gl.vertexAttribPointer(data, dimensions, this.gl.FLOAT, false, 0, 0);
 
-    drawTriangles = (noOfIndices) => {
-        this.gl.drawElements(this.gl.TRIANGLES, noOfIndices, this.gl.UNSIGNED_SHORT, 0);
-    }
+    drawTriangles = (noOfIndices) => this.gl.drawElements(this.gl.TRIANGLES, noOfIndices, this.gl.UNSIGNED_SHORT, 0);
 
     uploadMatrix4fv = (location, matrix) => this.gl.uniformMatrix4fv(location, false, matrix);
     getUniformLocation = (program, uniform) => this.gl.getUniformLocation(program, uniform);
 
     uploadVec3f = (location, vec3) => this.gl.uniform3fv(location, vec3);
     uploadFloat = (location, value) => this.gl.uniform1f(location, value);
+    uploadInt = (location, value) => this.gl.uniform1i(location, value);
+    uploadBool = (location, value) => this.gl.uniform1i(location, value ? 1 : 0);
 
+    createTexture = () => this.gl.createTexture();
+    bindTexture = (texture) => this.gl.bindTexture(this.gl.TEXTURE_2D, texture);
+    activeTexture = (texture) => this.gl.activeTexture(this.gl.TEXTURE0 + texture);
+    defineTexture = (img) => this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.RGBA, this.gl.UNSIGNED_BYTE, img);
+    defineDummyTexture = () => this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, 1, 1, 0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, new Uint8Array([ 0, 0, 255, 255 ]));
+    texturePowerOfTwo = () => this.gl.generateMipmap(this.gl.TEXTURE_2D);
+    textureNoPowerOfTwo = () => {
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
+        this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
+    }
 }
 
-const GLC = new GLCommander();
+const GLW = new GLWrapper();
 
-export default GLC;
+export default GLW;
