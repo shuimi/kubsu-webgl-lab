@@ -11,6 +11,10 @@ export default class Model {
         this.bodies.push(body);
     }
 
+    setTransform = (x, y, z) => {
+        this.bodies.forEach(body => body.position.setTransform(x, y, z));
+    }
+
     updateTransform = (x, y, z) => {
         this.bodies.forEach(body => body.position.updateTransform(x, y, z));
     }

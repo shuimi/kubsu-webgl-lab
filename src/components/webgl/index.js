@@ -7,6 +7,7 @@ import Camera from "./camera/camera";
 import Material from "./materials/material";
 import Body from "./bodies/body";
 import Cube from "./topologies/cube";
+import Box from "./topologies/box";
 import Model from "./model/model";
 
 export default class WebGL extends React.Component {
@@ -23,8 +24,8 @@ export default class WebGL extends React.Component {
         // scene config
 
         const renderer = new Renderer();
-        const light = new Light(-10, 0, -10, 1.0, 1.0, 1.0, 0.5);
-        const camera = new Camera();
+        const lightA = new Light(-2, 10, -10, 1.0, 1.0, 1.0, 0.4);
+        const camera = new Camera(0, 0.5, 1);
 
 
         // materials config
@@ -35,25 +36,31 @@ export default class WebGL extends React.Component {
 
         // bodies init
 
-        const cubeA = new Body(Cube, [material]);
-        const cubeB = new Body(Cube, [material]);
-        const cubeС = new Body(Cube, [material]);
+        const body = new Body(Box(0, 0, 0, 3.0, 1.0, -1.0), [material]);
+        const head = new Body(Box(-0.75, 1, 0.15, 1.3, 1.3, -1.3), [material]);
 
+        const earA = new Body(Box(-0.55, 2.2, -1.14, 0.3, 0.3, 0.3), [material]);
+        const earB = new Body(Box(-0.55, 2.2, 0.14, 0.3, 0.3, -0.3), [material]);
+
+        const legA = new Body(Box(0.1, 0, -0.1, 0.4, -0.5, -0.3), [material]);
+        const legB = new Body(Box(2.4, 0, -0.6, 0.4, -0.5, -0.3), [material]);
+        const legC = new Body(Box(0.1, 0, -0.6, 0.4, -0.5, -0.3), [material]);
+        const legD = new Body(Box(2.4, 0, -0.0, 0.4, -0.5, -0.3), [material]);
+
+        const tail = new Body(Box(3.0, 0.6, -0.3, 0.5, 0.3, -0.4), [material]);
 
         // bodies config
 
-        cubeA.position.setTransform(0.5, 0.5, 0.5);
-        cubeB.position.setTransform(0.5, 0.5, 0.5);
-        cubeС.position.setTransform(0.1, 0.1,0.1);
+        // body.position.setTransform(-0.5, 0.0, -2.0);
 
         // make model
 
-        const cat = new Model([cubeA, cubeB, cubeС])
+        const cat = new Model([body, head, earA, earB, legA, legB, legC, legD, tail]);
+        cat.updateTransform(0, 0, -3.0);
 
         // add bodies to rendering list
 
         renderer.addModel(cat);
-
 
         let frameIndex = 0;
 
@@ -62,11 +69,12 @@ export default class WebGL extends React.Component {
 
             // animate bodies here
 
-            // cat.updateTransform(-0.005, 0.001, 0.001);
+            cat.updateRotation(0, 0.4, 0);
+            cat.setTransform(0, Math.abs(Math.sin(frameIndex / 20) ** 6), -4);
 
             // render frame
 
-            renderer.render(light, camera);
+            renderer.render(lightA, camera);
             frameIndex += 1;
             window.requestAnimationFrame(render);
         }
