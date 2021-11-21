@@ -11,6 +11,18 @@ export default class Light {
         this.ambient = ambient;
     }
 
+    setPosition = (x, y, z) => {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    updatePosition = (x, y, z) => {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+    }
+
     getPosition = () => vec3.fromValues(this.x, this.y, this.z);
     getColor = () => vec3.fromValues(this.r, this.g, this.b);
     getAmbient = () => this.ambient;

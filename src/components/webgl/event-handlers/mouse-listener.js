@@ -3,7 +3,8 @@ import GLW from '../gl-wrapper';
 class MouseListener {
     constructor(){
         this.onWheelListeners = [];
-        this.onDragListeners = []
+        this.onDragListeners = [];
+        this.onKeyboardListeners = [];
     }
 
     init = () => {
@@ -47,6 +48,7 @@ class MouseListener {
     subscribeToWheel = (listener) => {
         this.onWheelListeners.push(listener)
     }
+
 }
 
 const MouseEvent = new MouseListener();
